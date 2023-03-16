@@ -24,7 +24,7 @@ Once block_attendancetable, mod_attendance and report_attendancetable are instal
 
 Requirements
 ============
-'mod_attendance'          =>  2021050702 [https://moodle.org/plugins/mod_attendance]
+'mod_attendance'          =>  2021050702 [Attendance](https://moodle.org/plugins/mod_attendance)
 'report_attendancetable'  =>  2022030300 []
 
 
