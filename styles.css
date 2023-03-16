@@ -1,0 +1,69 @@
+/* ----- Teacher table CSS ----- */
+.block_attendancetable #studenttable table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.block_attendancetable .studenttable td,
+.block_attendancetable .studenttable th {
+    border: 1px solid #000000;
+    text-align: left;
+    padding: 8px;
+    width: 50%;
+}
+
+.block_attendancetable .studenttable tr:nth-child(even) {
+    background-color: #ced4da;
+}
+
+.block_attendancetable .studenttable th {
+    font-weight: bold;
+    background-color: #ced4da;
+}
+
+/* ----- Student table CSS ----- */
+.block_attendancetable #attendancetable table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.block_attendancetable .attendancetable td {
+    text-align: left;
+}
+
+.block_attendancetable .attendancetable .c0 {
+    width: 75%;
+}
+
+.attendanceIcon {
+    padding-right: 10px;
+}
+
+/* Dashboard CSS */
+.block_attendancetable .smallText {
+    font-size: small;
+}
+
+/* ----- Global CSS ----- */
+.block_attendancetable .centerItem {
+    margin: 10px;
+    text-align: center;
+}
+
+.block_attendancetable .progressBar {
+    height: 1.6rem;
+}
+
+.block_attendancetable .progress-bar {
+    cursor: pointer;
+}
+
+.block_attendancetable .attendanceIcon {
+    width: 24px;
+}
