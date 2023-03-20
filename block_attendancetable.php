@@ -72,8 +72,6 @@ class block_attendancetable extends block_base {
             $attendance = $DB->get_record('attendance', array('id' => $firstattendance->instance), '*', MUST_EXIST);
             $context = context_module::instance($firstattendance->id);
 
-            require_login($course, true, $firstattendance);
-
             $attstructure = new mod_attendance_structure($attendance, $firstattendance, $course, $context, $attendanceparams);
             $attendanceparams->init($firstattendance);
 
