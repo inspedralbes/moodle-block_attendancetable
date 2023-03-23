@@ -23,6 +23,9 @@ Manual download
 ![Folder screenshot](/screenshots/block_folder.png)
 3. As admin, go to site administration and follow the necessary steps to install the plugin
 ![Sidebar](/screenshots/sidebar.png)
+<br>
+<sup>Sidebar on the dashboard, although Moodle might auto redirect the admin account to the administrator screen</sup>
+
 ![Report upgrade 1](/screenshots/upgrade.png)
 ![Report upgrade 2](/screenshots/plugin_upgrade.png)
 
@@ -34,14 +37,26 @@ Setting up the block
 3. Add the Attendance Table block to your course (students can also add it to their dashboard)
 ![Add to block](/screenshots/block_add_1.png)
 ![Add to block](/screenshots/block_add_2.png)
+![Add to dashboard](/screenshots/student_dashboard.png)
 4. (Optional) Configure how many students are shown to teachers and whether students can see the bar that contains a list of their sessions, the default value is 5 and ranges between 1 and 5
 ![Add to block](/screenshots/block_config.png)
+<br>
+<sup>These block settings are only enabled for teachers</sup>
 
 Block screenshots
 -----------------
 ![Teacher view](/screenshots/block_view_teacher.png)
+<br>
+<sup>The teacher's view</sup>
+
 ![Student view (course)](/screenshots/block_view_student.png)
+<br>
+<sup>The student's view on a course</sup>
+
 ![Student view (dashboard)](/screenshots/block_view_dashboard.png)
+<br>
+<sup>The student's view on the dashboard</sup>
+
 
 
 
