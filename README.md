@@ -8,9 +8,9 @@ Block Attendance Table
 Description
 ===========
 Block attendance table (hereinafter referred to as 'BAT') is a plugin based on [Attendance](https://moodle.org/plugins/mod_attendance) and
-Attendance Table [] used to show teachers and their students basic information on class attendance. BAT shows teachers the students with
+[Attendance Table](https://github.com/inspedralbes/moodle-report_attendancetable) used to show teachers and their students basic information on class attendance. BAT shows teachers the students with
 lowest attendance, and students a toggeable bar with each course's attendance and multiple percentages. Additionally, students can add BAT
-to their dashboard to see each course's attendance.
+to their dashboard to see each course's attendance on a bar, each course's percentage and their total attendance across all courses.
 
 Instructions
 ===========
@@ -20,7 +20,11 @@ Manual download
 ---------------
 1. Download the plugin
 2. Copy its content to a folder called attendancetable inside your moodle/blocks
+![Folder screenshot](/screenshots/block_folder.png)
 3. As admin, go to site administration and follow the necessary steps to install the plugin
+![Sidebar](/screenshots/sidebar.png)
+![Report upgrade 1](/screenshots/upgrade.png)
+![Report upgrade 2](/screenshots/plugin_upgrade.png)
 
 Setting up the block
 --------------------
@@ -28,13 +32,23 @@ Setting up the block
 1. Turn editing on
 2. Add an Attendance activity to your course (if there's none yet)
 3. Add the Attendance Table block to your course (students can also add it to their dashboard)
-4. (Optional) Configure how many students are shown to teachers and whether students can see the bar that contains a list of their sessions
+![Add to block](/screenshots/block_add_1.png)
+![Add to block](/screenshots/block_add_2.png)
+4. (Optional) Configure how many students are shown to teachers and whether students can see the bar that contains a list of their sessions, the default value is 5 and ranges between 1 and 5
+![Add to block](/screenshots/block_config.png)
+
+Block screenshots
+-----------------
+![Teacher view](/screenshots/block_view_teacher.png)
+![Student view (course)](/screenshots/block_view_student.png)
+![Student view (dashboard)](/screenshots/block_view_dashboard.png)
+
 
 
 Requirements
 ============
 * 'mod_attendance'          =>  2021050702 [Attendance](https://moodle.org/plugins/mod_attendance)
-* 'report_attendancetable'  =>  2022030300 []
+* 'report_attendancetable'  =>  2022030300 [Attendance Table Report](https://github.com/inspedralbes/moodle-report_attendancetable)
 
 
 Useful links
