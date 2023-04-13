@@ -8,9 +8,9 @@ Block Attendance Table
 Description
 ===========
 Block attendance table (hereinafter referred to as 'BAT') is a plugin based on [Attendance](https://moodle.org/plugins/mod_attendance) and
-[Attendance Table](https://github.com/inspedralbes/moodle-report_attendancetable) used to show teachers and their students basic information on class attendance. BAT shows teachers the students with
+[Attendance Table](https://github.com/inspedralbes/moodle-report_attendancetable) used to show tutors and their students basic information on class attendance. BAT shows teachers the students with
 lowest attendance, and students a toggeable bar with each course's attendance and multiple percentages. Additionally, students can add BAT
-to their dashboard to see each course's attendance on a bar, each course's percentage and their total attendance across all courses.
+to their dashboard to see each course's attendance on a bar, each course's percentage and their total attendance across all courses. Additionally, all views have a link used to quickly access Report Attendance Table.
 
 Instructions
 ===========
@@ -38,7 +38,7 @@ Setting up the block
 ![Add to block](/screenshots/block_add_1.png)
 ![Add to block](/screenshots/block_add_2.png)
 ![Add to dashboard](/screenshots/student_dashboard.png)
-4. (Optional) Configure how many students are shown to teachers and whether students can see the bar that contains a list of their sessions, the default value is 5 and ranges between 1 and 5
+4. (Optional) Configure how many students are shown to tutors and whether students can see the bar that contains a list of their sessions, the default value is 5 and ranges between 1 and 5
 ![Add to block](/screenshots/block_config.png)
 <br>
 <sup>These block settings are only enabled for teachers</sup>
@@ -47,7 +47,7 @@ Block screenshots
 -----------------
 ![Teacher view](/screenshots/block_view_teacher.png)
 <br>
-<sup>The teacher's view</sup>
+<sup>The tutor's view</sup>
 
 ![Student view (course)](/screenshots/block_view_student.png)
 <br>
