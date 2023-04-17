@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require($CFG->dirroot . '/blocks/attendancetable/locallib.php');
 define('SORT_STUDENT', 'sessiontime');
 define('SORT_TEACHER', 'averagepercentage');
 define('SORT_DASHBOARD', 'id');
@@ -42,6 +41,11 @@ class block_attendancetable extends block_base {
     }
 
     public function get_content() {
+
+        if ($this->content !== null) {
+            return $this->content;
+        }
+
         global $DB, $CFG, $USER, $COURSE;
         require_once($CFG->dirroot . '/mod/attendance/locallib.php');
         $id = optional_param('id', -1, PARAM_INT);
@@ -273,7 +277,7 @@ class block_attendancetable extends block_base {
                         $userpercentage = $this->get_attendance_percentages($userdata, $user->id);
 
                         if ($userpercentage->totalsection != 0) {
-                            $currentstudent = new student_info(
+                            $currentstudent = new \block_attendancetable\output\student_info(
                                 $user->firstname,
                                 $user->id,
                                 floatval(str_replace(',', '.', $userpercentage->averagepercentage))
@@ -371,8 +375,8 @@ class block_attendancetable extends block_base {
      * if the user is a student also an array containing all sections' info
      */
     private function get_attendance_percentages($userdata, $userid, $courseid = 0) {
-        $userattendance = new user_attendance_percentages();
-        $courseinfo = new course_info();
+        $userattendance = new \block_attendancetable\output\user_attendance_percentages;
+        $courseinfo = new \block_attendancetable\output\course_info();
 
         foreach ($userdata->coursesatts as $ca) {
             $userattendancesummary = new mod_attendance_summary($ca->attid, $userid);
@@ -434,7 +438,7 @@ class block_attendancetable extends block_base {
      */
     private function dashboard_get_percentages($ca, $userattendance, $sectionpercentage, $courseinfo) {
         global $CFG;
-        $sectioninfo = new user_section_info();
+        $sectioninfo = new \block_attendancetable\output\user_section_info();
         $sectioninfo->courseid = intval($ca->courseid);
         $sectioninfo->attendancepercentage += $sectionpercentage;
         $sectioninfo->coursename = $ca->coursefullname;
@@ -466,7 +470,7 @@ class block_attendancetable extends block_base {
         // Gets the average attendance of each course.
         foreach ($sectioninfo as $course) {
             $url = $CFG->wwwroot . '/course/view.php?id=' . $course->courseid;
-            $coursepercentage = new course_percentage(
+            $coursepercentage = new \block_attendancetable\output\course_percentage(
                 number_format($course->percentage / $course->sectioncount, 1, ',', ''),
                 $course->courseid,
                 $url,
@@ -524,7 +528,7 @@ class block_attendancetable extends block_base {
                 $url = $CFG->wwwroot . '/course/view.php?id=' . $couseresult->id;
                 $attendanceurl = 'mod/attendance/view.php?id=' . $cmid;
                 $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cmid;
-                $currentsession = new user_session(
+                $currentsession = new \block_attendancetable\output\user_session(
                     date("d/m/Y H:i", $attendancesessionresult->sessdate),
                     $attendancestatusresult->description,
                     get_string(strtolower($attendancestatusresult->description), 'block_attendancetable'),

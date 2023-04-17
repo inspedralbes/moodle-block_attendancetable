@@ -15,16 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Basic information for Attendance table block
+ * Class that stores the course's shown info
  *
  * @package    block_attendancetable
  * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace block_attendancetable\output;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023041700;
-$plugin->requires = 2020061500;
-$plugin->component = 'block_attendancetable';
-$plugin->dependencies = array('mod_attendance' => 2021050702);
-$plugin->dependencies = array('report_attendancetable' => 2022030300);
+class course_percentage {
+    /** @var string course's percentage in string */
+    public $percentage;
+    /** @var int student's id */
+    public $id;
+    /** @var string course's url */
+    public $url;
+    /** @var string course's name */
+    public $coursename;
+
+    public function __construct($percentage, $id, $url, $coursename) {
+        $this->percentage = $percentage;
+        $this->id = $id;
+        $this->url = $url;
+        $this->coursename = $coursename;
+    }
+}
