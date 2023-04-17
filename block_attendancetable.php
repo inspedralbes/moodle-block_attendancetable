@@ -116,8 +116,8 @@ class block_attendancetable extends block_base {
                     $context = context_module::instance($cmid, MUST_EXIST);
                     $attendance = $DB->get_record('attendance', ['id' => $cm->instance], '*', MUST_EXIST);
 
-                    $selectattendancesessions = "SELECT * FROM mdl_attendance_sessions WHERE attendanceid = {$attinst->id};";
-                    $attendancesessions = $DB->get_records_sql($selectattendancesessions);
+                    $selectattsessions = "SELECT * FROM mdl_attendance_sessions WHERE attendanceid = {$attinst->id};";
+                    $attendancesessions = $DB->get_records_sql($selectattsessions);
                     foreach ($attendancesessions as $attendancesession) {
                         $selectlog = "SELECT * FROM mdl_attendance_log WHERE studentid = {$USER->id}
                             AND sessionid={$attendancesession->id};";
@@ -125,14 +125,14 @@ class block_attendancetable extends block_base {
 
                         if ($logresult->statusid != null) {
                             $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE id = {$logresult->statusid};";
-                            $attendancestatusresult = $DB->get_record_sql($selectstatus);
+                            $attstatusresult = $DB->get_record_sql($selectstatus);
                             $attendanceurl = 'mod/attendance/view.php?id=' . $cm->id;
                             $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cm->id;
 
                             $currentsession = new user_session(
                                 date("d/m/Y H:i", $attendancesession->sessdate),
-                                $attendancestatusresult->description,
-                                get_string(strtolower($attendancestatusresult->description), 'block_attendancetable'),
+                                $attstatusresult->description,
+                                get_string(strtolower($attstatusresult->description), 'block_attendancetable'),
                                 $attinst->name,
                                 $attendanceurl,
                                 $attendanceurllong,
@@ -191,18 +191,18 @@ class block_attendancetable extends block_base {
                         $this->content->text .= $writerdivunderbar;
                     }
 
-                    $userattendancepercentages = $this->get_attendance_percentages($userdata, $USER->id, $id);
+                    $userattpercentages = $this->get_attendance_percentages($userdata, $USER->id, $id);
 
                     // Text shown on the average part.
                     $avgpercentagetext = get_string('avgpercentage', 'block_attendancetable') . ': ';
-                    $avgpercentagevalue = $userattendancepercentages->averagepercentage . '%';
+                    $avgpercentagevalue = $userattpercentages->averagepercentage . '%';
                     $avgcoursetext = get_string('avgcoursepercentage', 'block_attendancetable') . ': ';
-                    $avgcoursevalue = $userattendancepercentages->averagecoursepercentage . '%';
+                    $avgcoursevalue = $userattpercentages->averagecoursepercentage . '%';
 
                     $table = new html_table();
                     $table->attributes['class'] = 'attendancetable';
 
-                    foreach ($userattendancepercentages->sectionpercentages as $sectionpercentage) {
+                    foreach ($userattpercentages->sectionpercentages as $sectionpercentage) {
                         // Link to the current's section mod_attendance.
                         $linkrow = new html_table_row();
                         $writerlinkb = html_writer::tag('b', $sectionpercentage[0]);
@@ -243,27 +243,27 @@ class block_attendancetable extends block_base {
 
                     // All courses' average.
                     $avgrow = new html_table_row();
-                    $avgpercentagetextcell = new html_table_cell();
-                    $avgpercentagetextcell = html_writer::start_div();
-                    $avgpercentagetextcell = html_writer::div($avgpercentagetext);
-                    $avgpercentagetextcell .= html_writer::end_div();
-                    $avgpercentagevaluecell = html_writer::start_div();
-                    $avgpercentagevaluecell .= html_writer::div($avgpercentagevalue);
-                    $avgpercentagevaluecell .= html_writer::end_div();
-                    $avgrow->cells[] = $avgpercentagetextcell;
-                    $avgrow->cells[] = $avgpercentagevaluecell;
+                    $avgpercttextcell = new html_table_cell();
+                    $avgpercttextcell = html_writer::start_div();
+                    $avgpercttextcell = html_writer::div($avgpercentagetext);
+                    $avgpercttextcell .= html_writer::end_div();
+                    $avgperctagevaluecell = html_writer::start_div();
+                    $avgperctagevaluecell .= html_writer::div($avgpercentagevalue);
+                    $avgperctagevaluecell .= html_writer::end_div();
+                    $avgrow->cells[] = $avgpercttextcell;
+                    $avgrow->cells[] = $avgperctagevaluecell;
 
                     // Current course's average.
                     $courserow = new html_table_row();
-                    $coursepercentagetextcell = new html_table_cell();
-                    $coursepercentagetextcell = html_writer::start_div();
-                    $coursepercentagetextcell = html_writer::div($avgcoursetext);
-                    $coursepercentagetextcell .= html_writer::end_div();
-                    $coursepercentagevaluecell = html_writer::start_div();
-                    $coursepercentagevaluecell .= html_writer::div($avgcoursevalue);
-                    $coursepercentagevaluecell .= html_writer::end_div();
-                    $courserow->cells[] = $coursepercentagetextcell;
-                    $courserow->cells[] = $coursepercentagevaluecell;
+                    $coursepercttextcell = new html_table_cell();
+                    $coursepercttextcell = html_writer::start_div();
+                    $coursepercttextcell = html_writer::div($avgcoursetext);
+                    $coursepercttextcell .= html_writer::end_div();
+                    $courseperctvaluecell = html_writer::start_div();
+                    $courseperctvaluecell .= html_writer::div($avgcoursevalue);
+                    $courseperctvaluecell .= html_writer::end_div();
+                    $courserow->cells[] = $coursepercttextcell;
+                    $courserow->cells[] = $courseperctvaluecell;
 
                     $table->data[] = $checklinkrow;
                     $table->data[] = $avgrow;
@@ -568,11 +568,11 @@ class block_attendancetable extends block_base {
             ) {
                 $coursecounter = 0;
                 $userdata = new attendance_user_data($attstructure, $USER->id);
-                $userattendancepercentages = $this->get_attendance_percentages($userdata, $USER->id, -1);
+                $userattpercentages = $this->get_attendance_percentages($userdata, $USER->id, -1);
 
                 // Text shown on the average part.
                 $avgpercentagetext = get_string('avgpercentage', 'block_attendancetable') . ': ';
-                $avgpercentagevalue = $userattendancepercentages->averagepercentage . '%';
+                $avgpercentagevalue = $userattpercentages->averagepercentage . '%';
 
                 $table = new html_table();
                 $table->attributes['class'] = 'attendancetable';
@@ -622,7 +622,7 @@ class block_attendancetable extends block_base {
                     $attendancetext .= html_writer::start_span() .
                         get_string('attendance', 'block_attendancetable') . ': ' . html_writer::end_span();
                     $attendancetext .= html_writer::start_span() .
-                        $userattendancepercentages->coursepercentages[$coursecounter]->percentage . '%' . html_writer::end_span();
+                        $userattpercentages->coursepercentages[$coursecounter]->percentage . '%' . html_writer::end_span();
                     $attendancetext .= html_writer::end_div();
                     $this->content->text .= $attendancetext;
 
@@ -641,11 +641,11 @@ class block_attendancetable extends block_base {
                 }
             }
             $userdata = new attendance_user_data($attstructure, $USER->id);
-            $userattendancepercentages = $this->get_attendance_percentages($userdata, $USER->id, -1);
+            $userattpercentages = $this->get_attendance_percentages($userdata, $USER->id, -1);
 
             // Text shown on the average part.
             $avgpercentagetext = get_string('avgpercentage', 'block_attendancetable') . ': ';
-            $avgpercentagevalue = $userattendancepercentages->averagepercentage . '%';
+            $avgpercentagevalue = $userattpercentages->averagepercentage . '%';
 
             $table = new html_table();
             $table->attributes['class'] = 'attendancetable';
@@ -663,15 +663,15 @@ class block_attendancetable extends block_base {
 
             // All courses' average.
             $avgrow = new html_table_row();
-            $avgpercentagetextcell = new html_table_cell();
-            $avgpercentagetextcell = html_writer::start_div();
-            $avgpercentagetextcell = html_writer::div($avgpercentagetext);
-            $avgpercentagetextcell .= html_writer::end_div();
-            $avgpercentagevaluecell = html_writer::start_div();
-            $avgpercentagevaluecell .= html_writer::div($avgpercentagevalue);
-            $avgpercentagevaluecell .= html_writer::end_div();
-            $avgrow->cells[] = $avgpercentagetextcell;
-            $avgrow->cells[] = $avgpercentagevaluecell;
+            $avgpercttextcell = new html_table_cell();
+            $avgpercttextcell = html_writer::start_div();
+            $avgpercttextcell = html_writer::div($avgpercentagetext);
+            $avgpercttextcell .= html_writer::end_div();
+            $avgperctagevaluecell = html_writer::start_div();
+            $avgperctagevaluecell .= html_writer::div($avgpercentagevalue);
+            $avgperctagevaluecell .= html_writer::end_div();
+            $avgrow->cells[] = $avgpercttextcell;
+            $avgrow->cells[] = $avgperctagevaluecell;
 
             $table->data[] = $checklinkrow;
             $table->data[] = $avgrow;
