@@ -21,11 +21,12 @@
  * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class block_attendancetable_edit_form extends block_edit_form {
 
     /**
-     * Form for editing profile block settings
+     * Form to edit this block's behavior
+     * 
+     * @param object $mform
      *
      * @package    block_attendancetable
      * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
@@ -52,6 +53,7 @@ class block_attendancetable_edit_form extends block_edit_form {
 
     /**
      * If page is course, enable edit_form.
+     * @param object $page
      */
     public static function on_site_page($page = null) {
         $context = $page->context ?? null;

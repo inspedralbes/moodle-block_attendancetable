@@ -49,6 +49,17 @@ class user_session {
     /** @var string url to course */
     public $courseurl;
 
+    /**
+     * Constructor
+     * 
+     * @param string $sessiondate The session's date in DD/MM/YYYY HH:mm format
+     * @param string $attendanceenglish The session's attendance in english
+     * @param string $attendance The session's localized attendance
+     * @param string $attendancename The session's attendance name
+     * @param string $attendanceurl The url to mod_attendance's page -short-
+     * @param string $attendanceurllong The url to mod_attendance's page -long-
+     * @param int $sessiontime The session's time in seconds
+     */
     public function __construct($sessiondate, $attendanceenglish, $attendance, $attendancename,
     $attendanceurl, $attendanceurllong, $sessiontime) {
         $this->sessiondate = $sessiondate;

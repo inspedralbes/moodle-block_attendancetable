@@ -37,6 +37,13 @@ class student_info {
     /** @var float student's attendance percentage */
     public $averagepercentage;
 
+    /**
+     * Constructor
+     * 
+     * @param string $firstname The student's first name
+     * @param int $id The student's id
+     * @param float $averagepercentage The student's attendance percentage
+     */
     public function __construct($firstname, $id, $averagepercentage) {
         $this->firstname = $firstname;
         $this->id = $id;

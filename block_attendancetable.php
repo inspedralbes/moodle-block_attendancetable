@@ -73,7 +73,7 @@ class block_attendancetable extends block_base {
         $attendanceparams->sesscourses = 'current';
 
         if (self::on_site_page($this->page)) {
-            return self::show_dashboard_content($attstructure);
+            return self::show_dashboard_content();
         }
 
         if (count($allattendances) > 0) {
@@ -497,7 +497,7 @@ class block_attendancetable extends block_base {
     /**
      * Generates content if the current page is the dashboard
      */
-    public function show_dashboard_content($attstructure) {
+    public function show_dashboard_content() {
         global $COURSE, $USER, $DB, $CFG;
         $this->page->requires->js('/blocks/attendancetable/lib.js');
 
@@ -685,6 +685,7 @@ class block_attendancetable extends block_base {
 
     /**
      * Checks if the page is a course
+     * @param object $page
      */
     public static function on_site_page($page = null) {
         $context = $page->context ?? null;
