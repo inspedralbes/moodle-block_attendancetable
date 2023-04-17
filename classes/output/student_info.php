@@ -39,7 +39,7 @@ class student_info {
 
     /**
      * Constructor
-     * 
+     *
      * @param string $firstname The student's first name
      * @param int $id The student's id
      * @param float $averagepercentage The student's attendance percentage

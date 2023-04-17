@@ -25,7 +25,7 @@ class block_attendancetable_edit_form extends block_edit_form {
 
     /**
      * Form to edit this block's behavior
-     * 
+     *
      * @param object $mform
      *
      * @package    block_attendancetable

@@ -41,11 +41,11 @@ class course_percentage {
 
     /**
      * Constructor
-     * 
+     *
      * @param string $percentage The courses's percentage in string
      * @param int $id The student's id
      * @param string $url The courses's url
-     * @param string $percentage The courses's name
+     * @param string $coursename The courses's name
      */
     public function __construct($percentage, $id, $url, $coursename) {
         $this->percentage = $percentage;

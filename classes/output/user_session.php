@@ -51,7 +51,7 @@ class user_session {
 
     /**
      * Constructor
-     * 
+     *
      * @param string $sessiondate The session's date in DD/MM/YYYY HH:mm format
      * @param string $attendanceenglish The session's attendance in english
      * @param string $attendance The session's localized attendance
