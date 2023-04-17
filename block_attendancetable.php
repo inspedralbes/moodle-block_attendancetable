@@ -197,7 +197,7 @@ class block_attendancetable extends block_base {
                     $avgpercentagetext = get_string('avgpercentage', 'block_attendancetable') . ': ';
                     $avgpercentagevalue = $userattpercentages->averagepercentage . '%';
                     $avgcoursetext = get_string('avgcoursepercentage', 'block_attendancetable') . ': ';
-                    $avgcoursevalue = $userattpercentages->averagecoursepercentage . '%';
+                    $avgcoursevalue = $userattpercentages->avgcoursepercentage . '%';
 
                     $table = new html_table();
                     $table->attributes['class'] = 'attendancetable';
@@ -412,7 +412,7 @@ class block_attendancetable extends block_base {
             }
         }
 
-        $userattendance->averagecoursepercentage = $courseinfo->get_average();
+        $userattendance->avgcoursepercentage = $courseinfo->get_average();
         $userattendance->averagepercentage = $userattendance->get_average();
 
         if ($courseid == -1) {
@@ -520,11 +520,11 @@ class block_attendancetable extends block_base {
         if (count($attendancelogresult) > 0) {
             foreach ($attendancelogresult as $log) {
                 $selectsession = "SELECT * FROM mdl_attendance_sessions WHERE id = {$log->sessionid};";
-                $attendancesessionresult = $DB->get_record_sql($selectsession);
-                $selectattendance = "SELECT * FROM mdl_attendance WHERE id = {$attendancesessionresult->attendanceid};";
+                $attsessionresult = $DB->get_record_sql($selectsession);
+                $selectattendance = "SELECT * FROM mdl_attendance WHERE id = {$attsessionresult->attendanceid};";
                 $attendanceresult = $DB->get_record_sql($selectattendance);
                 $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE id = {$log->statusid};";
-                $attendancestatusresult = $DB->get_record_sql($selectstatus);
+                $attstatusresult = $DB->get_record_sql($selectstatus);
                 $selectmodule = "SELECT * FROM mdl_modules WHERE name = 'attendance';";
                 $moduleresult = $DB->get_record_sql($selectmodule);
                 $selectcourse = "SELECT * FROM mdl_course WHERE id = {$attendanceresult->course};";
@@ -544,13 +544,13 @@ class block_attendancetable extends block_base {
                 $attendanceurl = 'mod/attendance/view.php?id=' . $cmid;
                 $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cmid;
                 $currentsession = new \block_attendancetable\output\user_session(
-                    date("d/m/Y H:i", $attendancesessionresult->sessdate),
-                    $attendancestatusresult->description,
-                    get_string(strtolower($attendancestatusresult->description), 'block_attendancetable'),
+                    date("d/m/Y H:i", $attsessionresult->sessdate),
+                    $attstatusresult->description,
+                    get_string(strtolower($attstatusresult->description), 'block_attendancetable'),
                     $attendanceresult->name,
                     $attendanceurl,
                     $attendanceurllong,
-                    $attendancesessionresult->sessdate
+                    $attsessionresult->sessdate
                 );
                 $currentsession->coursename = $couseresult->fullname;
                 $currentsession->courseurl = $url;

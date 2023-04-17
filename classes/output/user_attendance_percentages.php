@@ -34,7 +34,7 @@ class user_attendance_percentages {
     /** @var float user's average attedance for all courses */
     public $averagepercentage = 0;
     /** @var float user's average attedance for current course */
-    public $averagecoursepercentage = 0;
+    public $avgcoursepercentage = 0;
     /** @var int course's section count */
     public $totalsection = 0;
     /** @var array course's sections' percentages */
