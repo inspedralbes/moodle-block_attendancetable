@@ -15,19 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renders information from attendance
+ * Block used to show information from the Mod Attendance plugin
  *
  * @package    block_attendancetable
  * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
 define('SORT_STUDENT', 'sessiontime');
 define('SORT_TEACHER', 'averagepercentage');
 define('SORT_DASHBOARD', 'id');
 
+/**
+ * Renders information from attendance
+ *
+ * @package    block_attendancetable
+ * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_attendancetable extends block_base {
+    /**
+     * Adds title to block
+     */
     public function init() {
         $this->title = get_string('attendancetable', 'block_attendancetable');
     }
@@ -40,6 +49,9 @@ class block_attendancetable extends block_base {
         return array('all' => false, 'course-view' => true, 'my' => true);
     }
 
+    /**
+     * Generates the block content
+     */
     public function get_content() {
 
         if ($this->content !== null) {
@@ -482,6 +494,9 @@ class block_attendancetable extends block_base {
         $userattendance->coursepercentages = $this->sort_array($userattendance->coursepercentages, SORT_DASHBOARD);
     }
 
+    /**
+     * Generates content if the current page is the dashboard
+     */
     public function show_dashboard_content($attstructure) {
         global $COURSE, $USER, $DB, $CFG;
         $this->page->requires->js('/blocks/attendancetable/lib.js');
@@ -668,6 +683,9 @@ class block_attendancetable extends block_base {
         return $this->content;
     }
 
+    /**
+     * Checks if the page is a course
+     */
     public static function on_site_page($page = null) {
         $context = $page->context ?? null;
 

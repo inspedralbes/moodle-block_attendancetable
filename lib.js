@@ -22,7 +22,6 @@ function onClick(url) {
 }
 
 function showInfoDashboard(imageDir, info, pos) {
-    //document.getElementById("hideOnHover-" + pos).style.display = "none";
     var messages = document.getElementsByClassName("hideOnHover");
     Array.prototype.forEach.call(messages, function(el) {
         el.style.display = "none";

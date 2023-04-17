@@ -24,6 +24,13 @@
 
 class block_attendancetable_edit_form extends block_edit_form {
 
+    /**
+     * Form for editing profile block settings
+     *
+     * @package    block_attendancetable
+     * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
+     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+     */
     protected function specific_definition($mform) {
         if (!self::on_site_page()) {
             // Section header title according to language file.
@@ -43,7 +50,9 @@ class block_attendancetable_edit_form extends block_edit_form {
         }
     }
 
-    // If page is course, enable edit_form.
+    /**
+     * If page is course, enable edit_form.
+     */ 
     public static function on_site_page($page = null) {
         $context = $page->context ?? null;
 

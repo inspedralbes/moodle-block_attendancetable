@@ -23,7 +23,12 @@
  */
 namespace block_attendancetable\output;
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Class that stores the student's info
+ *
+ * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 class student_info {
     /** @var string student's first name */

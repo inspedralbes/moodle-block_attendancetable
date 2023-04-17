@@ -23,8 +23,12 @@
  */
 namespace block_attendancetable\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Class that stores the course's shown info
+ *
+ * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course_percentage {
     /** @var string course's percentage in string */
     public $percentage;
