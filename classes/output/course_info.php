@@ -29,7 +29,6 @@ namespace block_attendancetable\output;
  * @copyright  2023, Alexis Navas <a22alenavest@inspedralbes.cat> <alexisnavas98@hotmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class course_info {
     /** @var float course's total percentage */
     public $totalpercentage = 0;

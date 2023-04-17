@@ -52,7 +52,7 @@ class block_attendancetable_edit_form extends block_edit_form {
 
     /**
      * If page is course, enable edit_form.
-     */ 
+     */
     public static function on_site_page($page = null) {
         $context = $page->context ?? null;
 
