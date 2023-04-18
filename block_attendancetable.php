@@ -387,6 +387,7 @@ class block_attendancetable extends block_base {
      * if the user is a student also an array containing all sections' info
      */
     private function get_attendance_percentages($userdata, $userid, $courseid = 0) {
+        global $DB;
         $userattendance = new \block_attendancetable\output\user_attendance_percentages;
         $courseinfo = new \block_attendancetable\output\course_info();
 
@@ -397,10 +398,17 @@ class block_attendancetable extends block_base {
                 round(($userattendancesummary->get_all_sessions_summary_for($userid)->takensessionspercentage * 100), 1);
             $userstats =
                 $userattendancesummary->get_taken_sessions_summary_for($userid)->userstakensessionsbyacronym[0] ?: null;
-            $usertotalstats += $userstats['P'] ?: 0;
-            $usertotalstats += $userstats['A'] ?: 0;
-            $usertotalstats += $userstats['T'] ?: 0;
-            $usertotalstats += $userstats['J'] ?: 0;
+
+            $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE attendanceid = {$ca->attid};";
+            $attstatusresult = $DB->get_records_sql($selectstatus);
+            $acronyms = [];
+            foreach($attstatusresult as $status) {
+                array_push($acronyms, $status->acronym);
+            }
+            $usertotalstats += $userstats[$acronyms[0]] ?: 0;
+            $usertotalstats += $userstats[$acronyms[1]] ?: 0;
+            $usertotalstats += $userstats[$acronyms[2]] ?: 0;
+            $usertotalstats += $userstats[$acronyms[3]] ?: 0;
             if ($usertotalstats != 0) {
                 $userattendance->totalpercentage += $currentsectionpercentage;
                 $userattendance->totalsection++;
