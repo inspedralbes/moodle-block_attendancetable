@@ -402,7 +402,7 @@ class block_attendancetable extends block_base {
             $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE attendanceid = {$ca->attid};";
             $attstatusresult = $DB->get_records_sql($selectstatus);
             $acronyms = [];
-            foreach($attstatusresult as $status) {
+            foreach ($attstatusresult as $status) {
                 array_push($acronyms, $status->acronym);
             }
             $usertotalstats += $userstats[$acronyms[0]] ?: 0;
