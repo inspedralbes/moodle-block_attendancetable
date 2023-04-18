@@ -129,7 +129,7 @@ class block_attendancetable extends block_base {
                             $attendanceurl = 'mod/attendance/view.php?id=' . $cm->id;
                             $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cm->id;
 
-                            $currentsession = new user_session(
+                            $currentsession = new \block_attendancetable\output\user_session(
                                 date("d/m/Y H:i", $attendancesession->sessdate),
                                 $attstatusresult->description,
                                 get_string(strtolower($attstatusresult->description), 'block_attendancetable'),
