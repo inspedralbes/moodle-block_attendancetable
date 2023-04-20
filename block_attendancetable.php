@@ -25,6 +25,8 @@
 define('SORT_STUDENT', 'sessiontime');
 define('SORT_TEACHER', 'averagepercentage');
 define('SORT_DASHBOARD', 'id');
+define('ORIGIN_COURSE', 'course');
+define('ORIGIN_DASHBOARD', 'dashboard');
 
 /**
  * Renders information from attendance
@@ -201,7 +203,7 @@ class block_attendancetable extends block_base {
         $usersessioncount = count($usersessions);
         $this->content->text = html_writer::start_div("progress border border-secondary progressBar rounded");
         foreach ($usersessions as $index => $session) {
-            $this->draw_bar_section($session, $index, $usersessioncount);
+            $this->draw_bar_section($session, $index, $usersessioncount, ORIGIN_COURSE);
         }
         $this->content->text .= html_writer::end_div();
         $writerdivunderbar .= html_writer::start_div();
@@ -221,8 +223,10 @@ class block_attendancetable extends block_base {
      * @param object $session An object containing the session info
      * @param int $index The position in the usersessions array
      * @param int $usersessioncount The total amount of sessions in usersessions
+     * @param string $origin A string containing which type of page this function is being called from
+     * @param int $pos The session position in the bar
      */
-    public function draw_bar_section($session, $index, $usersessioncount) {
+    public function draw_bar_section($session, $index, $usersessioncount, $origin, $pos = -1) {
         $barclass = '';
         switch ($session->attendanceenglish) {
             case 'Absent':
@@ -244,7 +248,7 @@ class block_attendancetable extends block_base {
 
         $writerbar = html_writer::start_div('progress-bar '  . $barclass, array(
             'onmouseover' => 'showInfo("../blocks/attendancetable/pix/",' .
-                json_encode($session) . ')', 'role' => 'progress-bar',
+                json_encode($session) . ', '. $pos .', "' . $origin . '")', 'role' => 'progress-bar',
                 'style' => 'width: ' . 100 / $usersessioncount . '%',
                 'aria-value' => 100 / $usersessioncount, 'onclick' => 'onClick("' . $session->attendanceurl .
                 '&view=1&curdate=' . $session->sessiontime . '")'
@@ -671,33 +675,7 @@ class block_attendancetable extends block_base {
                     $usersessioncount = count($usersessions);
                     $this->content->text .= html_writer::start_div("progress border border-secondary progressBar rounded");
                     foreach ($usersessions as $index => $session) {
-                        $barclass = '';
-                        switch ($session->attendanceenglish) {
-                            case 'Absent':
-                                $barclass = 'bg-danger';
-                                break;
-                            case 'Present':
-                                $barclass = 'bg-success';
-                                break;
-                            case 'Late':
-                                $barclass = 'bg-warning';
-                                break;
-                            case 'Excused':
-                                $barclass = 'bg-info';
-                                break;
-                        }
-                        if ($index < $usersessioncount - 1) {
-                            $barclass .= ' border-secondary border-right';
-                        }
-
-                        $writerbar = html_writer::start_div('progress-bar '  . $barclass, array(
-                            'onmouseover' => 'showInfoDashboard("../blocks/attendancetable/pix/",' .
-                                json_encode($session) . ',' . $coursecounter . ')', 'role' => 'progress-bar', 'style' => 'width: ' .
-                                100 / $usersessioncount . '%', 'aria-value' => 100 / $usersessioncount,
-                            'onclick' => 'onClick("' . $session->attendanceurl . '&view=1&curdate=' . $session->sessiontime . '")'
-                        ));
-                        $writerbar .= html_writer::end_div();
-                        $this->content->text .= $writerbar;
+                        $this->draw_bar_section($session, $index, $usersessioncount, ORIGIN_DASHBOARD, $coursecounter);
                     }
 
                     $this->content->text .= html_writer::end_div();

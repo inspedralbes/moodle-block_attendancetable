@@ -23,7 +23,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023042000;
+$plugin->version = 2023042001;
 $plugin->requires = 2020061500;
 $plugin->component = 'block_attendancetable';
 $plugin->dependencies = array('mod_attendance' => 2021050702);
