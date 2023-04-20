@@ -104,7 +104,7 @@ class block_attendancetable extends block_base {
                 has_capability('mod/attendance:changeattendances', $context)
             ) {
                 // This code is run if the current user is a (non-editing) teacher or admin.
-                $this->generate_teacher_table($users, $contextcourse, $attstructure);
+                $this->generate_teacher_table($users, $contextcourse, $attstructure, $id);
             }
         } else {
             $this->content->text = get_string('norecord', 'block_attendancetable');
@@ -184,7 +184,7 @@ class block_attendancetable extends block_base {
                 $table->data[] = $sectionrows[0];
                 $table->data[] = $sectionrows[1];
             }
-            $this->generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table);
+            $this->generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table, $id);
 
         } else {
             $this->content->text = get_string('nosession', 'block_attendancetable');
@@ -294,7 +294,7 @@ class block_attendancetable extends block_base {
      * @param object $table
      * @return object Generates the teacher table
      */
-    public function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table) {
+    public function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table, $id) {
         // Check report_attendancetable link.
         $checklinkrow = new html_table_row();
         $writerchecklinkb = html_writer::tag('b', get_string('gototext', 'block_attendancetable'));
@@ -342,9 +342,10 @@ class block_attendancetable extends block_base {
      * @param array $users A list of the course's enrolled users
      * @param object $contextcourse
      * @param object $attstructure
+     * @param int $id The course's id
      * @return object Generates the teacher table
      */
-    public function generate_teacher_table($users, $contextcourse, $attstructure) {
+    public function generate_teacher_table($users, $contextcourse, $attstructure, $id) {
         global $CFG;
         $shownusers = [];
         foreach ($users as $user) {
