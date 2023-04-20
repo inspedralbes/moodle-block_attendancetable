@@ -118,7 +118,7 @@ class block_attendancetable extends block_base {
      * @param int $id The course's id
      * @return object Generates the user table
      */
-    function generate_user_table($attstructure, $id) {
+    public function generate_user_table($attstructure, $id) {
         global $COURSE, $USER, $DB, $CFG;
         $this->page->requires->js('/blocks/attendancetable/lib.js');
         $attendances = get_all_instances_in_course('attendance', $COURSE, null, true);
@@ -196,7 +196,7 @@ class block_attendancetable extends block_base {
      * Generates the bar that shows each session's attendance info
      * @param array $usersessions A list of each session's info
      */
-    function generate_session_bar($usersessions) {
+    public function generate_session_bar($usersessions) {
         $usersessions = $this->sort_array($usersessions, SORT_STUDENT);
         $usersessioncount = count($usersessions);
         $this->content->text = html_writer::start_div("progress border border-secondary progressBar rounded");
@@ -222,7 +222,7 @@ class block_attendancetable extends block_base {
      * @param int $index The position in the usersessions array
      * @param int $usersessioncount The total amount of sessions in usersessions
      */
-    function draw_bar_section($session, $index, $usersessioncount) {
+    public function draw_bar_section($session, $index, $usersessioncount) {
         $barclass = '';
         switch ($session->attendanceenglish) {
             case 'Absent':
@@ -258,7 +258,7 @@ class block_attendancetable extends block_base {
      * @param array $sectionpercentage An array containing the necessary info
      * @return array An array containing a link and the attendance percentage of each attendance activity
      */
-    function generate_section_info($sectionpercentage) {
+    public function generate_section_info($sectionpercentage) {
         // Link to the current's section mod_attendance.
         $linkrow = new html_table_row();
         $writerlinkb = html_writer::tag('b', $sectionpercentage[0]);
@@ -294,7 +294,7 @@ class block_attendancetable extends block_base {
      * @param object $table
      * @return object Generates the teacher table
      */
-    function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table) {
+    public function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table) {
         // Check report_attendancetable link.
         $checklinkrow = new html_table_row();
         $writerchecklinkb = html_writer::tag('b', get_string('gototext', 'block_attendancetable'));
@@ -344,7 +344,7 @@ class block_attendancetable extends block_base {
      * @param object $attstructure
      * @return object Generates the teacher table
      */
-    function generate_teacher_table($users, $contextcourse, $attstructure) {
+    public function generate_teacher_table($users, $contextcourse, $attstructure) {
         global $CFG;
         $shownusers = [];
         foreach ($users as $user) {
@@ -394,7 +394,7 @@ class block_attendancetable extends block_base {
      * @param object $shownuser An object containing the user's info
      * @return object A row object containing the student's name and attendance percentage
      */
-    function generate_user_row($shownuser) {
+    public function generate_user_row($shownuser) {
         global $CFG;
         $rows = new html_table_row();
         $namecell = new html_table_cell();
@@ -414,7 +414,7 @@ class block_attendancetable extends block_base {
      * Generates a button linking to the course's report
      * @param int $id The course's id
      */
-    function generate_report_button($id) {
+    public function generate_report_button($id) {
         $formattributes = array('action' => $CFG->wwwroot . '/report/attendancetable/', 'method' => 'get');
         $form .= html_writer::start_tag('form', $formattributes);
         $form .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'id', 'value' => $id));
