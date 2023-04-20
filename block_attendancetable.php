@@ -292,6 +292,7 @@ class block_attendancetable extends block_base {
      * @param string $avgcoursetext
      * @param string $avgcoursevalue
      * @param object $table
+     * @param int $id The course's id
      * @return object Generates the teacher table
      */
     public function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table, $id) {
