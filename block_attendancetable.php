@@ -302,6 +302,33 @@ class block_attendancetable extends block_base {
     public function generate_global_links($avgpercentagetext, $avgpercentagevalue, $avgcoursetext, $avgcoursevalue, $table, $id) {
         // Check report_attendancetable link.
         $checklinkrow = new html_table_row();
+        $checklinkrow->cells[] = $this->generate_report_link($id);
+
+        // All courses' average.
+        $avgrow = new html_table_row();
+        $globalaveragecells = $this->generate_global_cells($avgpercentagetext, $avgpercentagevalue);
+        $avgrow->cells[] = $globalaveragecells[0];
+        $avgrow->cells[] = $globalaveragecells[1];
+
+        // Current course's average.
+        $courserow = new html_table_row();
+        $coursecells = $this->generate_course_cells($avgcoursetext, $avgcoursevalue);
+        $courserow->cells[] = $coursecells[0];
+        $courserow->cells[] = $coursecells[1];
+
+        $table->data[] = $checklinkrow;
+        $table->data[] = $avgrow;
+        $table->data[] = $courserow;
+        $this->content->text .= html_writer::div(html_writer::table($table),
+            '', ['id' => 'attendancetable']);
+    }
+
+    /**
+     * Generates the report link
+     * @param int $id A course's id
+     * @return object The report link in a table cell
+     */
+    private function generate_report_link($id) {
         $writerchecklinkb = html_writer::tag('b', get_string('gototext', 'block_attendancetable'));
         $writerchecklink = html_writer::tag('a', $writerchecklinkb,
             array('href' => $CFG->wwwroot . '/report/attendancetable/?id=' . $id));
@@ -309,10 +336,16 @@ class block_attendancetable extends block_base {
         $checklinkcell = html_writer::start_div();
         $checklinkcell = html_writer::div($writerchecklink);
         $checklinkcell .= html_writer::end_div();
-        $checklinkrow->cells[] = $checklinkcell;
+        return $checklinkcell;
+    }
 
-        // All courses' average.
-        $avgrow = new html_table_row();
+    /**
+     * Generates the global attendance average cells
+     * @param string $avgpercentagetext
+     * @param string $avgpercentagevalue
+     * @return object An array containing the text and percentage cells
+     */
+    private function generate_global_cells($avgpercentagetext, $avgpercentagevalue) {
         $avgpercttextcell = new html_table_cell();
         $avgpercttextcell = html_writer::start_div();
         $avgpercttextcell = html_writer::div($avgpercentagetext);
@@ -320,11 +353,15 @@ class block_attendancetable extends block_base {
         $avgperctagevaluecell = html_writer::start_div();
         $avgperctagevaluecell .= html_writer::div($avgpercentagevalue);
         $avgperctagevaluecell .= html_writer::end_div();
-        $avgrow->cells[] = $avgpercttextcell;
-        $avgrow->cells[] = $avgperctagevaluecell;
+        return array($avgpercttextcell, $avgperctagevaluecell);
+    }
 
-        // Current course's average.
-        $courserow = new html_table_row();
+    /**
+     * Generates the course's attendance average cells
+     * @param string $avgcoursevalue
+     * @return object An array containing the text and percentage cells
+     */
+    private function generate_course_cells($avgcoursetext, $avgcoursevalue) {
         $coursepercttextcell = new html_table_cell();
         $coursepercttextcell = html_writer::start_div();
         $coursepercttextcell = html_writer::div($avgcoursetext);
@@ -332,14 +369,7 @@ class block_attendancetable extends block_base {
         $courseperctvaluecell = html_writer::start_div();
         $courseperctvaluecell .= html_writer::div($avgcoursevalue);
         $courseperctvaluecell .= html_writer::end_div();
-        $courserow->cells[] = $coursepercttextcell;
-        $courserow->cells[] = $courseperctvaluecell;
-
-        $table->data[] = $checklinkrow;
-        $table->data[] = $avgrow;
-        $table->data[] = $courserow;
-        $this->content->text .= html_writer::div(html_writer::table($table),
-            '', ['id' => 'attendancetable']);
+        return array($coursepercttextcell,$courseperctvaluecell);
     }
 
     /**
@@ -607,45 +637,11 @@ class block_attendancetable extends block_base {
         $cid = 0;
         if (count($attendancelogresult) > 0) {
             foreach ($attendancelogresult as $log) {
-                $selectsession = "SELECT * FROM mdl_attendance_sessions WHERE id = {$log->sessionid};";
-                $attsessionresult = $DB->get_record_sql($selectsession);
-                $selectattendance = "SELECT * FROM mdl_attendance WHERE id = {$attsessionresult->attendanceid};";
-                $attendanceresult = $DB->get_record_sql($selectattendance);
-                $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE id = {$log->statusid};";
-                $attstatusresult = $DB->get_record_sql($selectstatus);
-                $selectmodule = "SELECT * FROM mdl_modules WHERE name = 'attendance';";
-                $moduleresult = $DB->get_record_sql($selectmodule);
-                $selectcourse = "SELECT * FROM mdl_course WHERE id = {$attendanceresult->course};";
-                $couseresult = $DB->get_record_sql($selectcourse);
-                $selectcm =
-                    "SELECT * FROM mdl_course_modules WHERE instance = {$attendanceresult->id} AND module = {$moduleresult->id};";
-                $cmresult = $DB->get_record_sql($selectcm);
-                $context = context_module::instance($cmresult->id);
-
-                if ($attstructure == '') {
-                    $attstructure =
-                        new mod_attendance_structure($attendanceresult, $cmresult, $COURSE, $context, $attendanceparams);
-                };
-                $cid = $cmresult->course;
-                $cmid = $cmresult->id;
-                $url = $CFG->wwwroot . '/course/view.php?id=' . $couseresult->id;
-                $attendanceurl = 'mod/attendance/view.php?id=' . $cmid;
-                $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cmid;
-                $currentsession = new \block_attendancetable\output\user_session(
-                    date("d/m/Y H:i", $attsessionresult->sessdate),
-                    $attstatusresult->description,
-                    get_string(strtolower($attstatusresult->description), 'block_attendancetable'),
-                    $attendanceresult->name,
-                    $attendanceurl,
-                    $attendanceurllong,
-                    $attsessionresult->sessdate
-                );
-                $currentsession->coursename = $couseresult->fullname;
-                $currentsession->courseurl = $url;
-                if ($studentinfo->$cid == null) {
-                    $studentinfo->$cid = [];
-                }
-                array_push($studentinfo->$cid, $currentsession);
+                $currentsessinfo = $this->generate_dashboard_session($log, $attstructure, $attendanceparams, $studentinfo);
+                $cid = $currentsessinfo[0];
+                $context = $currentsessinfo[2];
+                $attstructure = $currentsessinfo[3];
+                array_push($studentinfo->$cid, $currentsessinfo[1]);
             }
             if ($context == null) {
                 return;
@@ -665,40 +661,7 @@ class block_attendancetable extends block_base {
                 $table = new html_table();
                 $table->attributes['class'] = 'attendancetable';
                 foreach ($studentinfo as $course) {
-                    // Link to the course, shown over each.
-                    $writerlinkbarb = html_writer::tag('b', $course[0]->coursename);
-                    $writerlinkbar = html_writer::tag('a', $writerlinkbarb, array('href' => $course[0]->courseurl));
-                    $this->content->text .= $writerlinkbar;
-
-                    $writerdivunderbar = '';
-                    $usersessions = $this->sort_array($course, SORT_STUDENT);
-                    $usersessioncount = count($usersessions);
-                    $this->content->text .= html_writer::start_div("progress border border-secondary progressBar rounded");
-                    foreach ($usersessions as $index => $session) {
-                        $this->draw_bar_section($session, $index, $usersessioncount, ORIGIN_DASHBOARD, $coursecounter);
-                    }
-
-                    $this->content->text .= html_writer::end_div();
-
-                    $attendancetext = html_writer::start_div('smallText');
-                    $attendancetext .= html_writer::start_span() .
-                        get_string('attendance', 'block_attendancetable') . ': ' . html_writer::end_span();
-                    $attendancetext .= html_writer::start_span() .
-                        $userattpercentages->coursepercentages[$coursecounter]->percentage . '%' . html_writer::end_span();
-                    $attendancetext .= html_writer::end_div();
-                    $this->content->text .= $attendancetext;
-
-                    $writerdivunderbar .= html_writer::start_div();
-                    $writersmall = html_writer::start_tag('small', array('class' => 'hideOnHover'));
-                    $writersmall .= get_string('hovermessage', 'block_attendancetable');
-                    $writersmall .= html_writer::end_tag('small');
-                    $writerdivunderbar .= html_writer::div($writersmall);
-                    $writerdivunderbar .= html_writer::start_div('', array('id' => 'attendanceInfoBox-'
-                        . $coursecounter, 'class' => 'attendanceInfoBox', 'style' => 'display: none'));
-                    $writerdivunderbar .= html_writer::end_div();
-                    $writerdivunderbar .= html_writer::end_div();
-                    $this->content->text .= $writerdivunderbar;
-
+                    $this->generate_course_info_dashboard($course, $coursecounter, $userattpercentages);
                     $coursecounter++;
                 }
             }
@@ -714,26 +677,13 @@ class block_attendancetable extends block_base {
 
             // Check report_attendancetable link.
             $checklinkrow = new html_table_row();
-            $writerchecklinkb = html_writer::tag('b', get_string('gototext', 'block_attendancetable'));
-            $writerchecklink = html_writer::tag('a', $writerchecklinkb,
-                array('href' => $CFG->wwwroot . '/report/attendancetable/?id=' . $cid));
-            $checklinkcell = new html_table_cell();
-            $checklinkcell = html_writer::start_div();
-            $checklinkcell = html_writer::div($writerchecklink);
-            $checklinkcell .= html_writer::end_div();
-            $checklinkrow->cells[] = $checklinkcell;
+            $checklinkrow->cells[] = $this->generate_report_link($cid);
 
             // All courses' average.
             $avgrow = new html_table_row();
-            $avgpercttextcell = new html_table_cell();
-            $avgpercttextcell = html_writer::start_div();
-            $avgpercttextcell = html_writer::div($avgpercentagetext);
-            $avgpercttextcell .= html_writer::end_div();
-            $avgperctagevaluecell = html_writer::start_div();
-            $avgperctagevaluecell .= html_writer::div($avgpercentagevalue);
-            $avgperctagevaluecell .= html_writer::end_div();
-            $avgrow->cells[] = $avgpercttextcell;
-            $avgrow->cells[] = $avgperctagevaluecell;
+            $globalaveragecells = $this->generate_global_cells($avgpercentagetext, $avgpercentagevalue);
+            $avgrow->cells[] = $globalaveragecells[0];
+            $avgrow->cells[] = $globalaveragecells[1];
 
             $table->data[] = $checklinkrow;
             $table->data[] = $avgrow;
@@ -744,6 +694,101 @@ class block_attendancetable extends block_base {
 
         return $this->content;
     }
+
+    /**
+     * Generates the course's bar and each session's hover info
+     * @param object $course
+     * @param int $coursecounter
+     * @param object $userattpercentages
+     */
+    private function generate_course_info_dashboard($course, $coursecounter, $userattpercentages) {
+        // Link to the course, shown over each.
+        $writerlinkbarb = html_writer::tag('b', $course[0]->coursename);
+        $writerlinkbar = html_writer::tag('a', $writerlinkbarb, array('href' => $course[0]->courseurl));
+        $this->content->text .= $writerlinkbar;
+
+        $writerdivunderbar = '';
+        $usersessions = $this->sort_array($course, SORT_STUDENT);
+        $usersessioncount = count($usersessions);
+        $this->content->text .= html_writer::start_div("progress border border-secondary progressBar rounded");
+        foreach ($usersessions as $index => $session) {
+            $this->draw_bar_section($session, $index, $usersessioncount, ORIGIN_DASHBOARD, $coursecounter);
+        }
+
+        $this->content->text .= html_writer::end_div();
+
+        $attendancetext = html_writer::start_div('smallText');
+        $attendancetext .= html_writer::start_span() .
+            get_string('attendance', 'block_attendancetable') . ': ' . html_writer::end_span();
+        $attendancetext .= html_writer::start_span() .
+            $userattpercentages->coursepercentages[$coursecounter]->percentage . '%' . html_writer::end_span();
+        $attendancetext .= html_writer::end_div();
+        $this->content->text .= $attendancetext;
+
+        $writerdivunderbar .= html_writer::start_div();
+        $writersmall = html_writer::start_tag('small', array('class' => 'hideOnHover'));
+        $writersmall .= get_string('hovermessage', 'block_attendancetable');
+        $writersmall .= html_writer::end_tag('small');
+        $writerdivunderbar .= html_writer::div($writersmall);
+        $writerdivunderbar .= html_writer::start_div('', array('id' => 'attendanceInfoBox-'
+            . $coursecounter, 'class' => 'attendanceInfoBox', 'style' => 'display: none'));
+        $writerdivunderbar .= html_writer::end_div();
+        $writerdivunderbar .= html_writer::end_div();
+        $this->content->text .= $writerdivunderbar;
+    }
+
+    /**
+     * Generates each session's info
+     * @param object $log
+     * @param object $attstructure
+     * @param object $attendanceparams
+     * @param object $studentinfo
+     * @return array An array containing the session's course id, the current session's info, the context and attstructure
+     */
+    private function generate_dashboard_session($log, $attstructure, $attendanceparams, $studentinfo) {
+        global $DB, $COURSE, $CFG;
+
+        $selectsession = "SELECT * FROM mdl_attendance_sessions WHERE id = {$log->sessionid};";
+        $attsessionresult = $DB->get_record_sql($selectsession);
+        $selectattendance = "SELECT * FROM mdl_attendance WHERE id = {$attsessionresult->attendanceid};";
+        $attendanceresult = $DB->get_record_sql($selectattendance);
+        $selectstatus = "SELECT * FROM mdl_attendance_statuses WHERE id = {$log->statusid};";
+        $attstatusresult = $DB->get_record_sql($selectstatus);
+        $selectmodule = "SELECT * FROM mdl_modules WHERE name = 'attendance';";
+        $moduleresult = $DB->get_record_sql($selectmodule);
+        $selectcourse = "SELECT * FROM mdl_course WHERE id = {$attendanceresult->course};";
+        $couseresult = $DB->get_record_sql($selectcourse);
+        $selectcm =
+            "SELECT * FROM mdl_course_modules WHERE instance = {$attendanceresult->id} AND module = {$moduleresult->id};";
+        $cmresult = $DB->get_record_sql($selectcm);
+        $context = context_module::instance($cmresult->id);
+
+        if ($attstructure == '') {
+            $attstructure =
+                new mod_attendance_structure($attendanceresult, $cmresult, $COURSE, $context, $attendanceparams);
+        };
+        $cid = $cmresult->course;
+        $cmid = $cmresult->id;
+        $url = $CFG->wwwroot . '/course/view.php?id=' . $couseresult->id;
+        $attendanceurl = 'mod/attendance/view.php?id=' . $cmid;
+        $attendanceurllong = $CFG->wwwroot . '/mod/attendance/view.php?id=' . $cmid;
+        $currentsession = new \block_attendancetable\output\user_session(
+            date("d/m/Y H:i", $attsessionresult->sessdate),
+            $attstatusresult->description,
+            get_string(strtolower($attstatusresult->description), 'block_attendancetable'),
+            $attendanceresult->name,
+            $attendanceurl,
+            $attendanceurllong,
+            $attsessionresult->sessdate
+        );
+        $currentsession->coursename = $couseresult->fullname;
+        $currentsession->courseurl = $url;
+        if ($studentinfo->$cid == null) {
+            $studentinfo->$cid = [];
+        }
+        return array($cid, $currentsession, $context, $attstructure);
+    }
+        
 
     /**
      * Checks if the page is a course
