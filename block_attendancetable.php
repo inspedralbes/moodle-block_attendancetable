@@ -358,6 +358,7 @@ class block_attendancetable extends block_base {
 
     /**
      * Generates the course's attendance average cells
+     * @param string $avgcoursetext
      * @param string $avgcoursevalue
      * @return object An array containing the text and percentage cells
      */
@@ -369,7 +370,7 @@ class block_attendancetable extends block_base {
         $courseperctvaluecell = html_writer::start_div();
         $courseperctvaluecell .= html_writer::div($avgcoursevalue);
         $courseperctvaluecell .= html_writer::end_div();
-        return array($coursepercttextcell,$courseperctvaluecell);
+        return array($coursepercttextcell, $courseperctvaluecell);
     }
 
     /**
@@ -788,7 +789,6 @@ class block_attendancetable extends block_base {
         }
         return array($cid, $currentsession, $context, $attstructure);
     }
-        
 
     /**
      * Checks if the page is a course
