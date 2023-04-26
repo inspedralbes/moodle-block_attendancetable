@@ -28,3 +28,5 @@ $plugin->requires = 2020061500;
 $plugin->component = 'block_attendancetable';
 $plugin->dependencies = array('mod_attendance' => 2021050702);
 $plugin->dependencies = array('report_attendancetable' => 2022030300);
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '1.0.0';
