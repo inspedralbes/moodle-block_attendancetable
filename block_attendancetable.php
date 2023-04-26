@@ -55,14 +55,18 @@ class block_attendancetable extends block_base {
      * Generates the block content
      */
     public function get_content() {
+        global $DB, $CFG, $USER, $COURSE;
+        require_once($CFG->dirroot . '/mod/attendance/locallib.php');
+        $id = optional_param('id', -1, PARAM_INT);
 
         if ($this->content !== null) {
             return $this->content;
         }
+        \block_attendancetable\event\block_viewed::create([
+            'courseid' => $COURSE->id,
+            'userid' => $USER->id
+        ])->trigger();
 
-        global $DB, $CFG, $USER, $COURSE;
-        require_once($CFG->dirroot . '/mod/attendance/locallib.php');
-        $id = optional_param('id', -1, PARAM_INT);
 
         $allattendances = get_coursemodules_in_course('attendance', $id);
         $attendanceparams = new mod_attendance_view_page_params(); // Page parameters necessary to create mod_attendance_structure.
