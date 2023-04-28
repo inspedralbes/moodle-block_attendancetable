@@ -55,7 +55,7 @@ class block_attendancetable_edit_form extends block_edit_form {
      * Checks whether or not the edit form is for a course block
      */
     public static function on_course() {
-        $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . 
+        $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") .
             "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         return strpos($link, '/course/');
     }
