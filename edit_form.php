@@ -33,7 +33,7 @@ class block_attendancetable_edit_form extends block_edit_form {
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
     protected function specific_definition($mform) {
-        if (!self::on_site_page()) {
+        if (self::on_course()) {
             // Section header title according to language file.
             $mform->addElement('header', 'config_header', get_string('blocksettings', 'block'));
 
@@ -52,22 +52,11 @@ class block_attendancetable_edit_form extends block_edit_form {
     }
 
     /**
-     * If page is course, enable edit_form.
-     * @param object $page
+     * Checks whether or not the edit form is for a course block
      */
-    public static function on_site_page($page = null) {
-        $context = $page->context ?? null;
-
-        if (!$page || !$context) {
-            return false;
-        } else if ($context->contextlevel === CONTEXT_SYSTEM && $page->requestorigin === 'restore') {
-            return false;
-        } else if ($context->contextlevel === CONTEXT_COURSE && $context->instanceid == SITEID) {
-            return true;
-        } else if ($context->contextlevel < CONTEXT_COURSE) {
-            return true;
-        } else {
-            return false;
-        }
+    public static function on_course() {
+        $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . 
+            "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return strpos($link, '/course/');
     }
 }
